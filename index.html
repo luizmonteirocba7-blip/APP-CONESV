@@ -385,6 +385,20 @@
         </div>
     </main>
 
+    <div id="installPrompt" class="fixed bottom-0 left-0 right-0 bg-slate-800/95 backdrop-blur-xl text-white p-4 shadow-2xl z-50 flex justify-between items-center transform translate-y-full transition-transform duration-500 rounded-t-2xl border-t border-slate-700 hidden pointer-events-auto">
+        <div class="flex items-center gap-3">
+            <img src="./icone-192.png" alt="Logo do App" class="w-10 h-10 rounded-xl shadow-md border border-white/10">
+            <div>
+                <p class="font-bold text-sm">Instalar Aplicativo</p>
+                <p class="text-[10px] text-slate-400">Acesso rápido e tela cheia na inicial</p>
+            </div>
+        </div>
+        <div class="flex gap-2">
+            <button id="closeInstall" class="px-3 py-2 text-xs font-semibold text-slate-300 hover:text-white transition-colors">Agora Não</button>
+            <button id="installBtn" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-lg shadow-lg transition-colors">Instalar</button>
+        </div>
+    </div>
+
     <div id="inventoryModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 md:p-4 pointer-events-auto">
         <div class="modal-pro rounded-2xl w-full max-w-md max-h-[90vh] flex flex-col overflow-hidden transform transition-all duration-300 scale-95 opacity-0" id="modalContent">
             
@@ -511,7 +525,6 @@
         window.addEventListener('DOMContentLoaded', renderMarkers);
 
         // --- INTEGRAÇÃO COM GOOGLE SHEETS ---
-        // A sua URL do backend já está configurada aqui!
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwvNe68-22gsGURchyH4xOca91GSJ7q_XyQxF9tKLgooTatkeEtupueBe4NNwpjemTI/exec';
 
         const modal = document.getElementById('inventoryModal');
@@ -522,7 +535,6 @@
         const inventoryList = document.getElementById('inventoryList');
         const emptyMessage = document.getElementById('emptyMessage');
 
-        // Função que abre o modal e busca os dados na planilha
         async function openModal(zoneId, zoneName) {
             modalTitle.innerText = zoneName;
             inventoryList.innerHTML = '';
@@ -538,7 +550,6 @@
             }, 10);
 
             try {
-                // Fazendo a requisição real
                 const response = await fetch(SCRIPT_URL);
                 if (!response.ok) throw new Error('Falha na rede');
                 
@@ -614,6 +625,50 @@
                 inventoryList.appendChild(li);
             });
         }
+
+        // --- SISTEMA DE INSTALAÇÃO (BANNER POPUP) ---
+        let deferredPrompt;
+        const installPrompt = document.getElementById('installPrompt');
+        const installBtn = document.getElementById('installBtn');
+        const closeInstall = document.getElementById('closeInstall');
+
+        // Registra o Service Worker (o "motorzinho")
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('Service worker ativado!'))
+                    .catch(err => console.log('Erro no SW:', err));
+            });
+        }
+
+        // Intercepta o aviso padrão do Google e mostra o nosso Banner bonitão
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault(); // Impede o Google de mostrar o aviso feio
+            deferredPrompt = e; // Guarda a permissão para instalar
+            
+            // Faz o banner deslizar de baixo para cima
+            installPrompt.classList.remove('hidden');
+            setTimeout(() => {
+                installPrompt.classList.remove('translate-y-full');
+            }, 100);
+        });
+
+        // Quando o usuário clica no botão "Instalar" azul
+        installBtn.addEventListener('click', async () => {
+            installPrompt.classList.add('translate-y-full'); // Esconde o banner
+            if (deferredPrompt) {
+                deferredPrompt.prompt(); // Mostra a janela oficial de instalação do celular
+                const { outcome } = await deferredPrompt.userChoice;
+                console.log('Instalou?', outcome);
+                deferredPrompt = null;
+            }
+        });
+
+        // Quando o usuário clica em "Agora Não"
+        closeInstall.addEventListener('click', () => {
+            installPrompt.classList.add('translate-y-full');
+            setTimeout(() => installPrompt.classList.add('hidden'), 500);
+        });
     </script>
 </body>
 </html>
