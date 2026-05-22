@@ -308,7 +308,6 @@
 </head>
 <body class="relative text-slate-800 bg-slate-900 h-[100dvh]">
 
-    <!-- BACKGROUND DESFOCADO -->
     <div class="fixed inset-0 z-0">
         <img src="https://drive.google.com/thumbnail?id=1_7E8kEqzLm7t7IttUz9jJmoEoNHHYVSx&sz=w2500" 
              class="w-full h-full object-cover" 
@@ -316,7 +315,6 @@
         <div class="absolute inset-0 bg-gradient-to-br from-slate-900/85 via-slate-900/80 to-blue-950/85 backdrop-blur-md"></div>
     </div>
 
-    <!-- HEADER PRO -->
     <header class="header-gradient text-white px-4 md:px-6 py-3 shadow-2xl flex justify-between items-center gap-2 fixed top-0 w-full z-20 border-b border-white/10 h-auto md:h-[68px]">
         <div class="flex items-center gap-3">
             <div class="logo-icon w-9 h-9 md:w-10 md:h-10 rounded-xl flex items-center justify-center shrink-0">
@@ -337,7 +335,6 @@
 
     <main class="pt-[80px] md:pt-[88px] pb-4 px-2 md:px-6 w-full h-[100dvh] flex flex-col relative z-10 pointer-events-none">
         
-        <!-- HINT BANNER -->
         <div class="absolute top-24 left-1/2 transform -translate-x-1/2 z-30 hint-banner text-white text-xs px-4 py-2 rounded-full pointer-events-none flex items-center gap-2 font-medium">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
@@ -345,7 +342,6 @@
             <span>Arraste para mover · Pinça para zoom</span>
         </div>
 
-        <!-- WRAPPER DO MAPA -->
         <div class="relative w-full max-w-7xl mx-auto flex-1 flex flex-col overflow-hidden map-wrapper-pro rounded-2xl ring-1 ring-white/10 pointer-events-auto cursor-grab active:cursor-grabbing" id="map-wrapper">
             
             <div id="map-container" class="relative w-[1200px] md:w-full h-auto origin-center select-none" style="margin: auto;">
@@ -361,7 +357,6 @@
                 <div id="markers-container" class="absolute inset-0"></div>
             </div>
             
-            <!-- BOTÕES DE ZOOM PRO -->
             <div class="absolute bottom-4 right-4 flex flex-col gap-2 z-30">
                 <button id="zoom-in" class="zoom-btn w-11 h-11 rounded-xl flex items-center justify-center text-slate-700" title="Aumentar Zoom">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
@@ -371,7 +366,6 @@
                 </button>
             </div>
             
-            <!-- BADGE CONTADOR -->
             <div class="absolute bottom-4 left-4 z-30 hint-banner text-white px-3 py-1.5 rounded-xl flex items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -382,7 +376,6 @@
         </div>
     </main>
 
-    <!-- MODAL PRO -->
     <div id="inventoryModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 md:p-4 pointer-events-auto">
         <div class="modal-pro rounded-2xl w-full max-w-md max-h-[90vh] flex flex-col overflow-hidden transform transition-all duration-300 scale-95 opacity-0" id="modalContent">
             
@@ -459,7 +452,7 @@
             parking: '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>'
         };
 
-        // --- 10 MARCADORES (POSIÇÕES AJUSTADAS) ---
+        // --- 10 MARCADORES ---
         const mapMarkers = [
             { id: 'ponto-1', title: 'Stand Superior Esquerdo', top: 24, left: 28, icon: 'stand' },
             { id: 'ponto-2', title: 'Área 50 Mesas', top: 22, left: 48, icon: 'tables' },
@@ -486,25 +479,18 @@
                          onclick="openModal('${marker.id}', '${marker.title}')"
                          onpointerdown="event.stopPropagation();">
                         
-                        <!-- Tooltip Premium -->
                         <div class="tooltip-pro">${marker.title}</div>
                         
-                        <!-- Hitbox -->
                         <div class="absolute -inset-3 z-20 rounded-full"></div>
 
-                        <!-- Marcador Principal com Animação -->
                         <div class="relative flex flex-col items-center animate-float" style="animation-delay: ${delay}s;">
-                            
-                            <!-- Anéis Pulsantes -->
                             <div class="marker-pulse-ring pulse-ring" style="animation-delay: ${delay}s;"></div>
                             <div class="marker-pulse-ring pulse-ring-delayed" style="animation-delay: ${delay}s;"></div>
                             
-                            <!-- Core do Marcador -->
                             <div class="marker-core">
                                 ${iconSvg}
                             </div>
                             
-                            <!-- Agulha do Pino -->
                             <div class="marker-needle"></div>
                         </div>
                     </div>
@@ -513,29 +499,12 @@
             });
         }
 
-        // --- DADOS SIMULADOS ---
-        const mockDatabase = {
-            'ponto-1': [{ item: 'Cadeiras', qtd: 20, status: 'ok' }],
-            'ponto-2': [
-                { item: 'Mesas Redondas', qtd: 30, status: 'ok' },
-                { item: 'Cadeiras', qtd: 120, status: 'attention' }
-            ],
-            'ponto-3': [{ item: 'Lixeiras', qtd: 5, status: 'missing' }],
-            'ponto-4': [{ item: 'Balcão', qtd: 1, status: 'ok' }],
-            'ponto-5': [
-                { item: 'Palco/Estrutura', qtd: 1, status: 'ok' },
-                { item: 'Iluminação', qtd: 4, status: 'attention' }
-            ],
-            'ponto-6': [{ item: 'Tendas 3x3', qtd: 12, status: 'ok' }],
-            'ponto-7': [{ item: 'Grades de Isolamento', qtd: 10, status: 'ok' }],
-            'ponto-8': [{ item: 'Cone de Sinalização', qtd: 15, status: 'attention' }],
-            'ponto-9': [{ item: 'Placas de Sinalização', qtd: 3, status: 'missing' }],
-            'ponto-10': [{ item: 'Rádio Comunicador', qtd: 2, status: 'ok' }]
-        };
-
         window.addEventListener('DOMContentLoaded', renderMarkers);
 
-        // --- MODAL ---
+        // --- INTEGRAÇÃO COM GOOGLE SHEETS ---
+        // A sua URL do backend já está configurada aqui!
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwvNe68-22gsGURchyH4xOca91GSJ7q_XyQxF9tKLgooTatkeEtupueBe4NNwpjemTI/exec';
+
         const modal = document.getElementById('inventoryModal');
         const modalContent = document.getElementById('modalContent');
         const modalTitle = document.getElementById('modalTitle');
@@ -544,9 +513,11 @@
         const inventoryList = document.getElementById('inventoryList');
         const emptyMessage = document.getElementById('emptyMessage');
 
-        function openModal(zoneId, zoneName) {
+        // Função que abre o modal e busca os dados na planilha
+        async function openModal(zoneId, zoneName) {
             modalTitle.innerText = zoneName;
             inventoryList.innerHTML = '';
+            
             loadingIndicator.classList.remove('hidden');
             inventoryListContainer.classList.add('hidden');
             emptyMessage.classList.add('hidden');
@@ -557,7 +528,24 @@
                 modalContent.classList.add('scale-100', 'opacity-100');
             }, 10);
 
-            setTimeout(() => populateList(mockDatabase[zoneId]), 500);
+            try {
+                // Fazendo a requisição real
+                const response = await fetch(SCRIPT_URL);
+                if (!response.ok) throw new Error('Falha na rede');
+                
+                const database = await response.json();
+                const itemsDaAba = database[zoneId];
+                
+                populateList(itemsDaAba);
+                
+            } catch (error) {
+                console.error('Erro ao buscar dados:', error);
+                loadingIndicator.classList.add('hidden');
+                emptyMessage.classList.remove('hidden');
+                
+                emptyMessage.querySelector('p.text-slate-600').innerText = 'Erro de Conexão';
+                emptyMessage.querySelector('p.text-slate-400').innerText = 'Não foi possível sincronizar com o Google Sheets.';
+            }
         }
 
         function closeModal() {
@@ -574,6 +562,8 @@
             loadingIndicator.classList.add('hidden');
 
             if (!items || items.length === 0) {
+                emptyMessage.querySelector('p.text-slate-600').innerText = 'Nenhum material encontrado';
+                emptyMessage.querySelector('p.text-slate-400').innerText = 'Esta área ainda não tem inventário cadastrado';
                 emptyMessage.classList.remove('hidden');
                 return;
             }
@@ -586,12 +576,14 @@
                 li.className = "inventory-item flex justify-between items-center p-3 rounded-xl shadow-sm";
                 li.style.animationDelay = `${idx * 50}ms`;
 
+                const statusReal = item.status ? item.status.toLowerCase() : 'ok';
+
                 let statusConfig = {
                     ok: { color: 'bg-emerald-100 text-emerald-700', dot: 'bg-emerald-500', label: 'OK' },
                     attention: { color: 'bg-amber-100 text-amber-700', dot: 'bg-amber-500', label: 'ATENÇÃO' },
                     missing: { color: 'bg-rose-100 text-rose-700', dot: 'bg-rose-500', label: 'FALTANDO' }
                 };
-                const config = statusConfig[item.status] || statusConfig.ok;
+                const config = statusConfig[statusReal] || statusConfig.ok;
 
                 li.innerHTML = `
                     <div class="flex items-center gap-3 flex-1 min-w-0 pr-2">
