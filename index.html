@@ -395,20 +395,15 @@
 </head>
 <body class="relative text-slate-800 bg-slate-900 h-[100dvh]">
 
-    <!-- ============ FUNDO ============ -->
     <div class="fixed inset-0 z-0">
         <img src="https://drive.google.com/thumbnail?id=1_7E8kEqzLm7t7IttUz9jJmoEoNHHYVSx&sz=w2500"
              class="w-full h-full object-cover scale-105"
              alt="Imagem de Fundo">
-        <!-- Overlay leve para deixar a foto visível -->
         <div class="absolute inset-0 bg-overlay"></div>
-        <!-- Vinheta para foco -->
         <div class="absolute inset-0 bg-vignette"></div>
-        <!-- Reforço de contraste no topo/rodapé -->
         <div class="absolute inset-0 bg-edge-fade"></div>
     </div>
 
-    <!-- ============ HEADER ============ -->
     <header class="header-gradient text-white px-4 md:px-6 py-3 shadow-2xl flex justify-between items-center gap-2 fixed top-0 w-full z-20 border-b border-white/10 h-auto md:h-[68px]">
         <div class="flex items-center gap-3">
             <div class="logo-icon w-9 h-9 md:w-10 md:h-10 rounded-xl flex items-center justify-center shrink-0">
@@ -427,10 +422,8 @@
         </div>
     </header>
 
-    <!-- ============ MAIN ============ -->
     <main class="pt-[80px] md:pt-[88px] pb-4 px-2 md:px-6 w-full h-[100dvh] flex flex-col relative z-10 pointer-events-none">
 
-        <!-- Dica de gestos -->
         <div class="absolute top-24 left-1/2 transform -translate-x-1/2 z-30 hint-banner text-white text-xs px-4 py-2 rounded-full pointer-events-none flex items-center gap-2 font-medium">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-blue-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
@@ -452,7 +445,6 @@
                 <div id="markers-container" class="absolute inset-0"></div>
             </div>
 
-            <!-- Botões de zoom -->
             <div class="absolute bottom-4 right-4 flex flex-col gap-2.5 z-30">
                 <button id="zoom-in" class="zoom-btn w-11 h-11 rounded-xl flex items-center justify-center text-white" title="Aumentar Zoom">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
@@ -465,7 +457,6 @@
                 </button>
             </div>
 
-            <!-- Contador de áreas -->
             <div class="absolute bottom-4 left-4 z-30 hint-banner text-white px-3 py-1.5 rounded-xl flex items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -476,7 +467,6 @@
         </div>
     </main>
 
-    <!-- ============ BANNER DE INSTALAÇÃO ============ -->
     <div id="installPrompt" class="fixed bottom-0 left-0 right-0 bg-slate-800/95 backdrop-blur-xl text-white p-4 shadow-2xl z-50 flex justify-between items-center transform translate-y-full transition-transform duration-500 rounded-t-2xl border-t border-slate-700 hidden pointer-events-auto">
         <div class="flex items-center gap-3">
             <img src="./icone-192.png" alt="Logo do App" class="w-10 h-10 rounded-xl shadow-md border border-white/10">
@@ -491,7 +481,6 @@
         </div>
     </div>
 
-    <!-- ============ MODAL ============ -->
     <div id="inventoryModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 md:p-4 pointer-events-auto">
         <div class="modal-pro rounded-2xl w-full max-w-md max-h-[90vh] flex flex-col overflow-hidden transform transition-all duration-300 scale-95 opacity-0" id="modalContent">
 
@@ -506,9 +495,15 @@
                         <h2 id="modalTitle" class="text-sm md:text-base font-bold truncate">Área</h2>
                     </div>
                 </div>
-                <button onclick="closeModal()" class="text-slate-300 hover:text-white transition-all bg-white/10 hover:bg-white/20 rounded-full p-2 shrink-0 active:scale-90 relative">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
-                </button>
+                
+                <div class="flex items-center">
+                    <button onclick="solicitarSenha()" id="btn-unlock" class="text-slate-300 mr-2 hover:text-emerald-400 transition-all bg-white/10 hover:bg-white/20 rounded-full p-2 shrink-0 active:scale-90 relative" title="Habilitar Edição">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+                    </button>
+                    <button onclick="closeModal()" class="text-slate-300 hover:text-white transition-all bg-white/10 hover:bg-white/20 rounded-full p-2 shrink-0 active:scale-90 relative">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
             </div>
 
             <div class="p-4 md:p-6 overflow-y-auto">
@@ -542,6 +537,11 @@
     </div>
 
     <script>
+        // --- VARIÁVEIS GLOBAIS DE ESTADO ---
+        let isEditMode = false;
+        let currentPassword = '';
+        let currentZoneId = '';
+
         // --- PANZOOM ---
         const mapContainer = document.getElementById('map-container');
         const mapWrapper = document.getElementById('map-wrapper');
@@ -625,10 +625,17 @@
         const inventoryListContainer = document.getElementById('inventoryListContainer');
         const inventoryList = document.getElementById('inventoryList');
         const emptyMessage = document.getElementById('emptyMessage');
+        const btnUnlock = document.getElementById('btn-unlock');
 
         async function openModal(zoneId, zoneName) {
+            currentZoneId = zoneId;
             modalTitle.innerText = zoneName;
             inventoryList.innerHTML = '';
+            
+            // Sempre abre o modal com a edição desabilitada, a menos que venha de um reload automático de edição
+            if (!isEditMode) {
+                btnUnlock.classList.remove('text-emerald-400');
+            }
 
             loadingIndicator.classList.remove('hidden');
             inventoryListContainer.classList.add('hidden');
@@ -663,6 +670,11 @@
             modalContent.classList.remove('scale-100', 'opacity-100');
             modalContent.classList.add('scale-95', 'opacity-0');
             setTimeout(() => modal.classList.add('hidden'), 250);
+            
+            // Reseta a senha ao fechar para segurança
+            isEditMode = false;
+            currentPassword = '';
+            btnUnlock.classList.remove('text-emerald-400');
         }
 
         modal.addEventListener('click', (e) => {
@@ -697,25 +709,114 @@
                 };
                 const config = statusConfig[statusReal] || statusConfig.ok;
 
-                li.innerHTML = `
-                    <div class="flex items-center gap-3 flex-1 min-w-0 pr-2">
-                        <div class="relative">
-                            <div class="w-2.5 h-2.5 rounded-full shrink-0 ${config.dot}"></div>
-                            <div class="absolute inset-0 w-2.5 h-2.5 rounded-full ${config.dot} animate-ping opacity-50"></div>
+                if (isEditMode) {
+                    // MODO EDIÇÃO: Renderiza com inputs de formulário
+                    li.innerHTML = `
+                        <div class="flex flex-col gap-2 w-full">
+                            <div class="font-bold text-slate-800 text-sm">${item.item}</div>
+                            <div class="flex items-center gap-2">
+                                <select id="status-${idx}" class="text-xs p-2 border rounded-lg bg-slate-50 w-full outline-none focus:ring-2 focus:ring-blue-400 font-semibold text-slate-700">
+                                    <option value="ok" ${statusReal === 'ok' ? 'selected' : ''}>OK</option>
+                                    <option value="attention" ${statusReal === 'attention' ? 'selected' : ''}>ATENÇÃO</option>
+                                    <option value="missing" ${statusReal === 'missing' ? 'selected' : ''}>FALTANDO</option>
+                                </select>
+                                <input type="number" id="qtd-${idx}" value="${item.qtd}" class="w-16 p-2 text-center text-sm font-bold border rounded-lg bg-slate-50 outline-none focus:ring-2 focus:ring-blue-400 text-slate-800">
+                                <button onclick="salvarAlteracao('${item.item}', ${idx})" class="bg-blue-600 text-white p-2 rounded-lg shadow-md hover:bg-blue-700 active:scale-95 transition-transform flex items-center justify-center min-w-[36px]">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
+                                </button>
+                            </div>
                         </div>
-                        <div class="min-w-0 flex-1">
-                            <div class="font-bold text-slate-800 text-sm truncate">${item.item}</div>
-                            <div class="text-[10px] text-slate-500 font-semibold uppercase tracking-wider mt-0.5">${config.label}</div>
+                    `;
+                } else {
+                    // MODO VISUALIZAÇÃO: Renderiza apenas como texto
+                    li.innerHTML = `
+                        <div class="flex items-center gap-3 flex-1 min-w-0 pr-2">
+                            <div class="relative">
+                                <div class="w-2.5 h-2.5 rounded-full shrink-0 ${config.dot}"></div>
+                                <div class="absolute inset-0 w-2.5 h-2.5 rounded-full ${config.dot} animate-ping opacity-50"></div>
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <div class="font-bold text-slate-800 text-sm truncate">${item.item}</div>
+                                <div class="text-[10px] text-slate-500 font-semibold uppercase tracking-wider mt-0.5">${config.label}</div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="flex items-center gap-2 shrink-0">
-                        <div class="px-3 py-1.5 rounded-lg bg-slate-900 text-white text-sm font-bold tabular-nums">
-                            ${item.qtd}
+                        <div class="flex items-center gap-2 shrink-0">
+                            <div class="px-3 py-1.5 rounded-lg bg-slate-900 text-white text-sm font-bold tabular-nums">
+                                ${item.qtd}
+                            </div>
                         </div>
-                    </div>
-                `;
+                    `;
+                }
                 inventoryList.appendChild(li);
             });
+        }
+
+        // --- SISTEMA DE SENHA ---
+        function solicitarSenha() {
+            if (isEditMode) {
+                // Se já estiver editando, clicar no cadeado tranca novamente
+                isEditMode = false;
+                currentPassword = '';
+                btnUnlock.classList.remove('text-emerald-400');
+                openModal(currentZoneId, modalTitle.innerText);
+                return;
+            }
+
+            const senhaDigitada = prompt("Digite a senha para habilitar a inserção de dados:");
+            if (senhaDigitada) {
+                currentPassword = senhaDigitada;
+                isEditMode = true;
+                btnUnlock.classList.add('text-emerald-400');
+                openModal(currentZoneId, modalTitle.innerText); // Recarrega ativando os inputs
+            }
+        }
+
+        // --- SISTEMA DE SALVAMENTO DE DADOS (POST) ---
+        async function salvarAlteracao(nomeItem, idx) {
+            const novaQtd = document.getElementById(`qtd-${idx}`).value;
+            const novoStatus = document.getElementById(`status-${idx}`).value;
+            const btn = event.currentTarget;
+            
+            // Efeito visual de loading no botão
+            const iconeOriginal = btn.innerHTML;
+            btn.innerHTML = '<svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>';
+            
+            const payload = {
+                senha: currentPassword,
+                zona: currentZoneId,
+                item: nomeItem,
+                novaQtd: novaQtd,
+                novoStatus: novoStatus
+            };
+
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                if (result.sucesso) {
+                    // Confirmação visual rápida
+                    btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>';
+                    btn.classList.replace('bg-blue-600', 'bg-emerald-500');
+                    
+                    // Recarrega a área após 1 segundo para mostrar os novos dados do servidor
+                    setTimeout(() => { openModal(currentZoneId, modalTitle.innerText); }, 1000); 
+                } else {
+                    alert("Atenção: " + result.erro);
+                    btn.innerHTML = iconeOriginal;
+                    if (result.erro === "Senha incorreta!") {
+                        isEditMode = false;
+                        solicitarSenha(); // Pede novamente se tiver errado
+                    }
+                }
+            } catch (error) {
+                console.error('Erro ao salvar:', error);
+                alert("Erro de conexão ao tentar salvar.");
+                btn.innerHTML = iconeOriginal;
+            }
         }
 
         // --- SISTEMA DE INSTALAÇÃO (BANNER POPUP) ---
@@ -724,7 +825,6 @@
         const installBtn = document.getElementById('installBtn');
         const closeInstall = document.getElementById('closeInstall');
 
-        // Registra o Service Worker (o "motorzinho")
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./sw.js')
@@ -733,7 +833,6 @@
             });
         }
 
-        // Intercepta o aviso padrão do Google e mostra o nosso Banner
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
@@ -744,7 +843,6 @@
             }, 100);
         });
 
-        // Quando o usuário clica no botão "Instalar"
         installBtn.addEventListener('click', async () => {
             installPrompt.classList.add('translate-y-full');
             if (deferredPrompt) {
@@ -755,7 +853,6 @@
             }
         });
 
-        // Quando o usuário clica em "Agora Não"
         closeInstall.addEventListener('click', () => {
             installPrompt.classList.add('translate-y-full');
             setTimeout(() => installPrompt.classList.add('hidden'), 500);
