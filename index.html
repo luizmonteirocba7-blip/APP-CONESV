@@ -4,23 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Mapa de Inventário - Evento</title>
-    
+
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#0f172a">
-    
+
     <link rel="manifest" href="./manifest.json">
-    
+
     <link rel="apple-touch-icon" sizes="180x180" href="./icone-180.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@panzoom/panzoom@4.5.1/dist/panzoom.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <style>
-        * { font-family: 'Inter', sans-serif; }
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-        /* === ANIMAÇÕES MODERNAS === */
+    <style>
+        /* ====================================================
+           VARIÁVEIS DE TEMA
+        ==================================================== */
+        :root {
+            --accent: #3b82f6;
+            --accent-light: #60a5fa;
+            --accent-dark: #2563eb;
+            --accent-deep: #1d4ed8;
+            --ink: #0f172a;
+            --ink-soft: #1e293b;
+        }
+
+        * { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+
+        /* ====================================================
+           ANIMAÇÕES
+        ==================================================== */
         @keyframes float {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-4px); }
@@ -28,32 +42,18 @@
         .animate-float { animation: float 3s ease-in-out infinite; }
 
         @keyframes pulse-ring {
-            0% { transform: scale(0.8); opacity: 0.8; }
+            0% { transform: scale(0.8); opacity: 0.75; }
             100% { transform: scale(2.4); opacity: 0; }
         }
-        .pulse-ring {
-            animation: pulse-ring 2.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
-        }
+        .pulse-ring { animation: pulse-ring 2.6s cubic-bezier(0.215, 0.61, 0.355, 1) infinite; }
 
         @keyframes pulse-ring-delayed {
-            0% { transform: scale(0.8); opacity: 0.6; }
-            100% { transform: scale(2.8); opacity: 0; }
+            0% { transform: scale(0.8); opacity: 0.55; }
+            100% { transform: scale(2.9); opacity: 0; }
         }
         .pulse-ring-delayed {
-            animation: pulse-ring-delayed 2.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+            animation: pulse-ring-delayed 2.6s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
             animation-delay: 0.8s;
-        }
-
-        @keyframes glow {
-            0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.4), 0 0 40px rgba(59, 130, 246, 0.2); }
-            50% { box-shadow: 0 0 30px rgba(59, 130, 246, 0.6), 0 0 60px rgba(59, 130, 246, 0.3); }
-        }
-        .animate-glow { animation: glow 3s ease-in-out infinite; }
-
-        @keyframes scan-line {
-            0% { transform: translateY(-100%); opacity: 0; }
-            50% { opacity: 1; }
-            100% { transform: translateY(100%); opacity: 0; }
         }
 
         @keyframes gradient-shift {
@@ -61,85 +61,143 @@
             50% { background-position: 100% 50%; }
         }
 
-        /* === MARCADOR === */
+        @keyframes item-in {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes status-pulse {
+            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        /* ====================================================
+           FUNDO — VISIBILIDADE EQUILIBRADA
+        ==================================================== */
+        .bg-overlay {
+            background: linear-gradient(135deg,
+                rgba(15, 23, 42, 0.62) 0%,
+                rgba(15, 23, 42, 0.55) 45%,
+                rgba(23, 37, 84, 0.66) 100%);
+        }
+        /* Vinheta: escurece levemente as bordas e mantém o centro mais claro */
+        .bg-vignette {
+            background: radial-gradient(ellipse 85% 80% at 50% 38%,
+                rgba(2, 6, 23, 0) 0%,
+                rgba(2, 6, 23, 0.45) 100%);
+        }
+        /* Reforço de contraste sob o header e o rodapé */
+        .bg-edge-fade {
+            background:
+                linear-gradient(to bottom, rgba(2, 6, 23, 0.55) 0%, transparent 18%),
+                linear-gradient(to top, rgba(2, 6, 23, 0.4) 0%, transparent 16%);
+        }
+
+        /* ====================================================
+           HEADER
+        ==================================================== */
+        .header-gradient {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.82) 0%, rgba(30, 41, 59, 0.82) 100%);
+            background-size: 200% 200%;
+            animation: gradient-shift 16s ease infinite;
+            backdrop-filter: blur(18px) saturate(160%);
+            -webkit-backdrop-filter: blur(18px) saturate(160%);
+        }
+        .header-gradient::after {
+            content: '';
+            position: absolute;
+            left: 0; right: 0; bottom: -1px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.55), transparent);
+        }
+
+        /* ====================================================
+           MARCADOR
+        ==================================================== */
         .marker-pin {
             position: absolute;
             transform: translate(-50%, -100%);
             z-index: 10;
         }
-
         .marker-core {
             position: relative;
-            width: 36px;
-            height: 36px;
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 50%, #1d4ed8 100%);
+            background: linear-gradient(145deg, var(--accent-light) 0%, var(--accent) 48%, var(--accent-deep) 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 
-                0 4px 12px rgba(37, 99, 235, 0.4),
-                0 0 0 4px rgba(255, 255, 255, 0.95),
-                0 0 0 5px rgba(37, 99, 235, 0.3),
-                inset 0 1px 2px rgba(255, 255, 255, 0.4);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow:
+                0 6px 16px rgba(29, 78, 216, 0.5),
+                0 0 0 3.5px rgba(255, 255, 255, 0.96),
+                0 0 0 5px rgba(37, 99, 235, 0.32),
+                inset 0 1.5px 3px rgba(255, 255, 255, 0.55),
+                inset 0 -3px 6px rgba(29, 78, 216, 0.45);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
         }
-
-        .marker-pin:hover .marker-core {
-            transform: scale(1.15);
-            box-shadow: 
-                0 8px 24px rgba(37, 99, 235, 0.6),
-                0 0 0 4px rgba(255, 255, 255, 1),
+        .marker-pin:hover .marker-core,
+        .marker-pin:active .marker-core {
+            transform: scale(1.18);
+            box-shadow:
+                0 10px 26px rgba(37, 99, 235, 0.6),
+                0 0 0 3.5px rgba(255, 255, 255, 1),
                 0 0 0 6px rgba(37, 99, 235, 0.5),
-                inset 0 1px 2px rgba(255, 255, 255, 0.5);
+                inset 0 1.5px 3px rgba(255, 255, 255, 0.6),
+                inset 0 -3px 6px rgba(29, 78, 216, 0.5);
         }
-
         .marker-pulse-ring {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 36px;
-            height: 36px;
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
-            border: 2px solid rgba(59, 130, 246, 0.6);
+            border: 2px solid rgba(96, 165, 250, 0.65);
             pointer-events: none;
         }
-
         .marker-needle {
             width: 0;
             height: 0;
             border-left: 6px solid transparent;
             border-right: 6px solid transparent;
-            border-top: 8px solid #2563eb;
+            border-top: 9px solid var(--accent-dark);
             margin-top: -2px;
-            filter: drop-shadow(0 2px 2px rgba(37, 99, 235, 0.4));
+            filter: drop-shadow(0 2px 3px rgba(29, 78, 216, 0.5));
         }
 
-        /* === TOOLTIP PREMIUM === */
+        /* ====================================================
+           TOOLTIP
+        ==================================================== */
         .tooltip-pro {
             position: absolute;
             bottom: 100%;
             left: 50%;
             transform: translateX(-50%) translateY(-8px);
-            background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.95) 100%);
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.97) 0%, rgba(30, 41, 59, 0.97) 100%);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             color: white;
             font-size: 11px;
             font-weight: 600;
             padding: 6px 12px;
-            border-radius: 8px;
+            border-radius: 9px;
             white-space: nowrap;
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.25s, transform 0.25s;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.16);
             letter-spacing: 0.3px;
             z-index: 100;
         }
-
         .tooltip-pro::after {
             content: '';
             position: absolute;
@@ -147,22 +205,16 @@
             left: 50%;
             transform: translateX(-50%);
             border: 5px solid transparent;
-            border-top-color: rgba(15, 23, 42, 0.95);
+            border-top-color: rgba(15, 23, 42, 0.97);
         }
-
         .marker-pin:hover .tooltip-pro {
             opacity: 1;
             transform: translateX(-50%) translateY(-4px);
         }
 
-        /* === HEADER GRADIENTE === */
-        .header-gradient {
-            background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 41, 59, 0.9) 100%);
-            background-size: 200% 200%;
-            animation: gradient-shift 15s ease infinite;
-        }
-
-        /* === BADGE STATUS === */
+        /* ====================================================
+           STATUS DOT (header)
+        ==================================================== */
         .status-dot {
             position: relative;
             width: 8px;
@@ -173,157 +225,190 @@
             animation: status-pulse 2s infinite;
         }
 
-        @keyframes status-pulse {
-            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-            70% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
-        }
-
-        /* === GLOBAL === */
+        /* ====================================================
+           GLOBAL
+        ==================================================== */
         html, body {
             overflow: hidden;
             overscroll-behavior: none;
             touch-action: none;
         }
 
-        /* === MAPA WRAPPER === */
+        /* ====================================================
+           MAPA WRAPPER
+        ==================================================== */
         .map-wrapper-pro {
-            background: rgba(15, 23, 42, 0.4);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            box-shadow: 
-                0 20px 60px rgba(0, 0, 0, 0.5),
-                0 0 0 1px rgba(255, 255, 255, 0.1) inset,
-                0 1px 0 rgba(255, 255, 255, 0.2) inset;
+            background: rgba(15, 23, 42, 0.34);
+            backdrop-filter: blur(14px) saturate(140%);
+            -webkit-backdrop-filter: blur(14px) saturate(140%);
+            box-shadow:
+                0 24px 70px rgba(0, 0, 0, 0.55),
+                0 0 0 1px rgba(255, 255, 255, 0.12) inset,
+                0 1px 0 rgba(255, 255, 255, 0.22) inset;
+        }
+        /* Linha de destaque no topo do mapa */
+        .map-wrapper-pro::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 12%; right: 12%;
+            height: 1.5px;
+            background: linear-gradient(90deg, transparent, rgba(96, 165, 250, 0.7), transparent);
+            z-index: 25;
+            pointer-events: none;
         }
 
-        /* === BOTÕES ZOOM PRO === */
+        /* ====================================================
+           BOTÕES DE ZOOM (glass escuro)
+        ==================================================== */
         .zoom-btn {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(241, 245, 249, 0.95) 100%);
-            backdrop-filter: blur(12px);
-            box-shadow: 
-                0 4px 12px rgba(0, 0, 0, 0.15),
-                0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.88) 0%, rgba(15, 23, 42, 0.88) 100%);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            box-shadow:
+                0 8px 22px rgba(0, 0, 0, 0.45),
+                0 0 0 1px rgba(255, 255, 255, 0.05) inset,
+                0 1px 0 rgba(255, 255, 255, 0.12) inset;
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
         .zoom-btn:hover {
-            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-            box-shadow: 
-                0 6px 16px rgba(0, 0, 0, 0.2),
-                0 0 0 1px rgba(59, 130, 246, 0.3) inset;
-            transform: translateY(-1px);
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.95) 0%, rgba(29, 78, 216, 0.95) 100%);
+            border-color: rgba(96, 165, 250, 0.55);
+            box-shadow:
+                0 12px 28px rgba(37, 99, 235, 0.45),
+                0 0 0 1px rgba(96, 165, 250, 0.4) inset;
+            transform: translateY(-2px);
         }
+        .zoom-btn:active { transform: scale(0.92); }
 
-        .zoom-btn:active {
-            transform: scale(0.92);
-        }
-
-        /* === MODAL PRO === */
+        /* ====================================================
+           MODAL
+        ==================================================== */
         .modal-pro {
-            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-            box-shadow: 
-                0 25px 80px rgba(0, 0, 0, 0.5),
-                0 0 0 1px rgba(255, 255, 255, 0.1);
+            background: linear-gradient(180deg, #ffffff 0%, #f1f5f9 100%);
+            box-shadow:
+                0 30px 90px rgba(0, 0, 0, 0.6),
+                0 0 0 1px rgba(255, 255, 255, 0.12);
         }
-
         .modal-header-pro {
             background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
             position: relative;
             overflow: hidden;
         }
-
         .modal-header-pro::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
+            top: 0; left: 0; right: 0;
             height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.6), transparent);
+            background: linear-gradient(90deg, transparent, rgba(96, 165, 250, 0.7), transparent);
         }
-
-        .modal-header-pro::after {
-            content: '';
+        .modal-header-pro .glow-orb {
             position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.35) 0%, transparent 70%);
+            top: -90px;
+            right: -40px;
+            pointer-events: none;
         }
 
-        /* === ITEM LIST PRO === */
+        /* ====================================================
+           ITENS DA LISTA DE INVENTÁRIO
+        ==================================================== */
         .inventory-item {
             background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
             border: 1px solid rgba(226, 232, 240, 1);
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease, border-color 0.2s ease;
             position: relative;
             overflow: hidden;
+            animation: item-in 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
         }
-
         .inventory-item::before {
             content: '';
             position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
+            left: 0; top: 0; bottom: 0;
             width: 3px;
-            background: linear-gradient(180deg, #3b82f6, #2563eb);
+            background: linear-gradient(180deg, var(--accent-light), var(--accent-dark));
             transform: scaleY(0);
             transform-origin: top;
             transition: transform 0.3s ease;
         }
-
         .inventory-item:hover {
-            transform: translateX(2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            border-color: rgba(59, 130, 246, 0.3);
+            transform: translateX(3px);
+            box-shadow: 0 6px 18px rgba(15, 23, 42, 0.1);
+            border-color: rgba(59, 130, 246, 0.35);
         }
+        .inventory-item:hover::before { transform: scaleY(1); }
 
-        .inventory-item:hover::before {
-            transform: scaleY(1);
-        }
-
-        /* === LOGO/IDENTIDADE === */
+        /* ====================================================
+           LOGO
+        ==================================================== */
         .logo-icon {
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-            box-shadow: 
-                0 4px 12px rgba(37, 99, 235, 0.4),
-                0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+            background: linear-gradient(135deg, var(--accent-light) 0%, var(--accent-deep) 100%);
+            box-shadow:
+                0 6px 16px rgba(37, 99, 235, 0.5),
+                0 0 0 1px rgba(255, 255, 255, 0.14) inset,
+                0 1px 2px rgba(255, 255, 255, 0.4) inset;
         }
 
-        /* === HINT BANNER === */
+        /* ====================================================
+           BANNERS / CHIPS
+        ==================================================== */
         .hint-banner {
-            background: linear-gradient(135deg, rgba(15, 23, 42, 0.75) 0%, rgba(30, 41, 59, 0.75) 100%);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            box-shadow: 
-                0 8px 24px rgba(0, 0, 0, 0.3),
-                0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.7) 0%, rgba(30, 41, 59, 0.7) 100%);
+            backdrop-filter: blur(16px) saturate(150%);
+            -webkit-backdrop-filter: blur(16px) saturate(150%);
+            box-shadow:
+                0 10px 26px rgba(0, 0, 0, 0.32),
+                0 0 0 1px rgba(255, 255, 255, 0.12) inset;
+        }
+        .chip-glass {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.14);
         }
 
-        /* Scrollbar customizada */
+        /* ====================================================
+           SCROLLBAR
+        ==================================================== */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #f1f5f9; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #cbd5e1, #94a3b8);
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover { background: #64748b; }
 
-        /* Status indicator das cores */
-        .status-bar-ok { background: linear-gradient(180deg, #10b981, #059669); }
-        .status-bar-attention { background: linear-gradient(180deg, #f59e0b, #d97706); }
-        .status-bar-missing { background: linear-gradient(180deg, #ef4444, #dc2626); }
+        /* Botão CTA escuro */
+        .btn-dark {
+            background: linear-gradient(135deg, #334155 0%, #0f172a 100%);
+            transition: all 0.2s ease;
+        }
+        .btn-dark:hover {
+            background: linear-gradient(135deg, #475569 0%, #1e293b 100%);
+            box-shadow: 0 8px 22px rgba(15, 23, 42, 0.4);
+        }
+        .btn-dark:active { transform: scale(0.96); }
     </style>
 </head>
 <body class="relative text-slate-800 bg-slate-900 h-[100dvh]">
 
+    <!-- ============ FUNDO ============ -->
     <div class="fixed inset-0 z-0">
-        <img src="https://drive.google.com/thumbnail?id=1_7E8kEqzLm7t7IttUz9jJmoEoNHHYVSx&sz=w2500" 
-             class="w-full h-full object-cover" 
+        <img src="https://drive.google.com/thumbnail?id=1_7E8kEqzLm7t7IttUz9jJmoEoNHHYVSx&sz=w2500"
+             class="w-full h-full object-cover scale-105"
              alt="Imagem de Fundo">
-        <div class="absolute inset-0 bg-gradient-to-br from-slate-900/85 via-slate-900/80 to-blue-950/85 backdrop-blur-md"></div>
+        <!-- Overlay leve para deixar a foto visível -->
+        <div class="absolute inset-0 bg-overlay"></div>
+        <!-- Vinheta para foco -->
+        <div class="absolute inset-0 bg-vignette"></div>
+        <!-- Reforço de contraste no topo/rodapé -->
+        <div class="absolute inset-0 bg-edge-fade"></div>
     </div>
 
+    <!-- ============ HEADER ============ -->
     <header class="header-gradient text-white px-4 md:px-6 py-3 shadow-2xl flex justify-between items-center gap-2 fixed top-0 w-full z-20 border-b border-white/10 h-auto md:h-[68px]">
         <div class="flex items-center gap-3">
             <div class="logo-icon w-9 h-9 md:w-10 md:h-10 rounded-xl flex items-center justify-center shrink-0">
@@ -332,59 +417,66 @@
                 </svg>
             </div>
             <div class="flex flex-col">
-                <h1 class="text-sm md:text-lg font-bold tracking-tight leading-tight">Gestão de Inventário</h1>
-                <span class="text-[10px] md:text-xs text-slate-400 font-medium tracking-wider uppercase">Event Map · Real-time</span>
+                <h1 class="text-sm md:text-lg font-extrabold tracking-tight leading-tight">Gestão de Inventário</h1>
+                <span class="text-[10px] md:text-xs text-blue-300/90 font-semibold tracking-[0.15em] uppercase">Event Map · Real-time</span>
             </div>
         </div>
-        <div class="flex items-center gap-2 bg-white/5 backdrop-blur-sm px-3 py-1.5 rounded-full border border-white/10">
+        <div class="flex items-center gap-2 chip-glass px-3 py-1.5 rounded-full">
             <span class="status-dot"></span>
-            <span class="text-[11px] md:text-xs font-semibold text-slate-200 tracking-wide">Sheets Sync</span>
+            <span class="text-[11px] md:text-xs font-semibold text-slate-100 tracking-wide">Sheets Sync</span>
         </div>
     </header>
 
+    <!-- ============ MAIN ============ -->
     <main class="pt-[80px] md:pt-[88px] pb-4 px-2 md:px-6 w-full h-[100dvh] flex flex-col relative z-10 pointer-events-none">
-        
+
+        <!-- Dica de gestos -->
         <div class="absolute top-24 left-1/2 transform -translate-x-1/2 z-30 hint-banner text-white text-xs px-4 py-2 rounded-full pointer-events-none flex items-center gap-2 font-medium">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-blue-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
             </svg>
             <span>Arraste para mover · Pinça para zoom</span>
         </div>
 
         <div class="relative w-full max-w-7xl mx-auto flex-1 flex flex-col overflow-hidden map-wrapper-pro rounded-2xl ring-1 ring-white/10 pointer-events-auto cursor-grab active:cursor-grabbing" id="map-wrapper">
-            
+
             <div id="map-container" class="relative w-[1200px] md:w-full h-auto origin-center select-none" style="margin: auto;">
-                
-                <img 
-                    src="https://drive.google.com/thumbnail?id=1LbxYyVez6prfKQA_FwaO1jAYsEeZZ2Eu&sz=w2500" 
-                    alt="Planta do Evento" 
+
+                <img
+                    src="https://drive.google.com/thumbnail?id=1LbxYyVez6prfKQA_FwaO1jAYsEeZZ2Eu&sz=w2500"
+                    alt="Planta do Evento"
                     class="w-full h-auto block pointer-events-none"
                     draggable="false"
                     onerror="this.src='https://placehold.co/1200x800/e2e8f0/475569?text=Erro+ao+carregar+imagem+do+Drive'"
                 >
-
                 <div id="markers-container" class="absolute inset-0"></div>
             </div>
-            
-            <div class="absolute bottom-4 right-4 flex flex-col gap-2 z-30">
-                <button id="zoom-in" class="zoom-btn w-11 h-11 rounded-xl flex items-center justify-center text-slate-700" title="Aumentar Zoom">
+
+            <!-- Botões de zoom -->
+            <div class="absolute bottom-4 right-4 flex flex-col gap-2.5 z-30">
+                <button id="zoom-in" class="zoom-btn w-11 h-11 rounded-xl flex items-center justify-center text-white" title="Aumentar Zoom">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                 </button>
-                <button id="zoom-out" class="zoom-btn w-11 h-11 rounded-xl flex items-center justify-center text-slate-700" title="Diminuir Zoom">
+                <button id="zoom-out" class="zoom-btn w-11 h-11 rounded-xl flex items-center justify-center text-white" title="Diminuir Zoom">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                 </button>
+                <button id="zoom-reset" class="zoom-btn w-11 h-11 rounded-xl flex items-center justify-center text-white" title="Centralizar mapa">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9V5a2 2 0 0 1 2-2h4M3 15v4a2 2 0 0 0 2 2h4M21 9V5a2 2 0 0 0-2-2h-4M21 15v4a2 2 0 0 1-2 2h-4"></path></svg>
+                </button>
             </div>
-            
+
+            <!-- Contador de áreas -->
             <div class="absolute bottom-4 left-4 z-30 hint-banner text-white px-3 py-1.5 rounded-xl flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
-                <span class="text-xs font-semibold tracking-wide">10 áreas ativas</span>
+                <span class="text-xs font-semibold tracking-wide"><span id="areaCount">10</span> áreas ativas</span>
             </div>
         </div>
     </main>
 
+    <!-- ============ BANNER DE INSTALAÇÃO ============ -->
     <div id="installPrompt" class="fixed bottom-0 left-0 right-0 bg-slate-800/95 backdrop-blur-xl text-white p-4 shadow-2xl z-50 flex justify-between items-center transform translate-y-full transition-transform duration-500 rounded-t-2xl border-t border-slate-700 hidden pointer-events-auto">
         <div class="flex items-center gap-3">
             <img src="./icone-192.png" alt="Logo do App" class="w-10 h-10 rounded-xl shadow-md border border-white/10">
@@ -399,20 +491,22 @@
         </div>
     </div>
 
+    <!-- ============ MODAL ============ -->
     <div id="inventoryModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 md:p-4 pointer-events-auto">
         <div class="modal-pro rounded-2xl w-full max-w-md max-h-[90vh] flex flex-col overflow-hidden transform transition-all duration-300 scale-95 opacity-0" id="modalContent">
-            
+
             <div class="modal-header-pro text-white px-5 py-4 flex justify-between items-center shrink-0">
-                <div class="flex items-center gap-3 min-w-0">
-                    <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shrink-0 shadow-lg ring-1 ring-white/20">
+                <div class="glow-orb"></div>
+                <div class="flex items-center gap-3 min-w-0 relative">
+                    <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-400 to-blue-700 flex items-center justify-center shrink-0 shadow-lg ring-1 ring-white/25">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
                     </div>
                     <div class="min-w-0">
-                        <div class="text-[10px] uppercase tracking-wider text-blue-300 font-bold">Inventário</div>
+                        <div class="text-[10px] uppercase tracking-[0.15em] text-blue-300 font-bold">Inventário</div>
                         <h2 id="modalTitle" class="text-sm md:text-base font-bold truncate">Área</h2>
                     </div>
                 </div>
-                <button onclick="closeModal()" class="text-slate-300 hover:text-white transition-all bg-white/10 hover:bg-white/20 rounded-full p-2 shrink-0 active:scale-90">
+                <button onclick="closeModal()" class="text-slate-300 hover:text-white transition-all bg-white/10 hover:bg-white/20 rounded-full p-2 shrink-0 active:scale-90 relative">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
                 </button>
             </div>
@@ -430,7 +524,7 @@
                 <div id="inventoryListContainer" class="hidden flex-col h-full">
                     <ul id="inventoryList" class="space-y-2 pb-2"></ul>
                     <div class="mt-4 pt-4 border-t border-slate-200 flex justify-end shrink-0">
-                        <button onclick="closeModal()" class="px-5 py-2.5 bg-gradient-to-br from-slate-800 to-slate-900 hover:from-slate-700 hover:to-slate-800 text-white text-sm rounded-xl font-semibold transition-all shadow-lg active:scale-95 w-full md:w-auto">
+                        <button onclick="closeModal()" class="btn-dark px-5 py-2.5 text-white text-sm rounded-xl font-semibold shadow-lg w-full md:w-auto">
                             Fechar
                         </button>
                     </div>
@@ -451,15 +545,15 @@
         // --- PANZOOM ---
         const mapContainer = document.getElementById('map-container');
         const mapWrapper = document.getElementById('map-wrapper');
-        
+
         const panzoom = Panzoom(mapContainer, {
             maxScale: 4, minScale: 0.4, step: 0.2,
             cursor: 'grab', touchAction: 'none'
         });
-
         mapWrapper.addEventListener('wheel', panzoom.zoomWithWheel);
         document.getElementById('zoom-in').addEventListener('click', panzoom.zoomIn);
         document.getElementById('zoom-out').addEventListener('click', panzoom.zoomOut);
+        document.getElementById('zoom-reset').addEventListener('click', () => panzoom.reset());
 
         // --- ÍCONES SVG TEMÁTICOS PARA CADA TIPO DE ÁREA ---
         const icons = {
@@ -492,41 +586,38 @@
         function renderMarkers() {
             const container = document.getElementById('markers-container');
             container.innerHTML = '';
-
             mapMarkers.forEach(marker => {
                 const delay = (Math.random() * 2).toFixed(1);
                 const iconSvg = icons[marker.icon] || icons.stand;
-
                 const markerHTML = `
-                    <div class="marker-pin cursor-pointer group" style="top: ${marker.top}%; left: ${marker.left}%;" 
+                    <div class="marker-pin cursor-pointer group" style="top: ${marker.top}%; left: ${marker.left}%;"
                          onclick="openModal('${marker.id}', '${marker.title}')"
                          onpointerdown="event.stopPropagation();">
-                        
-                        <div class="tooltip-pro">${marker.title}</div>
-                        
-                        <div class="absolute -inset-3 z-20 rounded-full"></div>
 
+                        <div class="tooltip-pro">${marker.title}</div>
+
+                        <div class="absolute -inset-3 z-20 rounded-full"></div>
                         <div class="relative flex flex-col items-center animate-float" style="animation-delay: ${delay}s;">
                             <div class="marker-pulse-ring pulse-ring" style="animation-delay: ${delay}s;"></div>
                             <div class="marker-pulse-ring pulse-ring-delayed" style="animation-delay: ${delay}s;"></div>
-                            
+
                             <div class="marker-core">
                                 ${iconSvg}
                             </div>
-                            
+
                             <div class="marker-needle"></div>
                         </div>
                     </div>
                 `;
                 container.insertAdjacentHTML('beforeend', markerHTML);
             });
+            const counter = document.getElementById('areaCount');
+            if (counter) counter.textContent = mapMarkers.length;
         }
-
         window.addEventListener('DOMContentLoaded', renderMarkers);
 
         // --- INTEGRAÇÃO COM GOOGLE SHEETS ---
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwvNe68-22gsGURchyH4xOca91GSJ7q_XyQxF9tKLgooTatkeEtupueBe4NNwpjemTI/exec';
-
         const modal = document.getElementById('inventoryModal');
         const modalContent = document.getElementById('modalContent');
         const modalTitle = document.getElementById('modalTitle');
@@ -538,11 +629,11 @@
         async function openModal(zoneId, zoneName) {
             modalTitle.innerText = zoneName;
             inventoryList.innerHTML = '';
-            
+
             loadingIndicator.classList.remove('hidden');
             inventoryListContainer.classList.add('hidden');
             emptyMessage.classList.add('hidden');
-            
+
             modal.classList.remove('hidden');
             setTimeout(() => {
                 modalContent.classList.remove('scale-95', 'opacity-0');
@@ -552,17 +643,17 @@
             try {
                 const response = await fetch(SCRIPT_URL);
                 if (!response.ok) throw new Error('Falha na rede');
-                
+
                 const database = await response.json();
                 const itemsDaAba = database[zoneId];
-                
+
                 populateList(itemsDaAba);
-                
+
             } catch (error) {
                 console.error('Erro ao buscar dados:', error);
                 loadingIndicator.classList.add('hidden');
                 emptyMessage.classList.remove('hidden');
-                
+
                 emptyMessage.querySelector('p.text-slate-600').innerText = 'Erro de Conexão';
                 emptyMessage.querySelector('p.text-slate-400').innerText = 'Não foi possível sincronizar com o Google Sheets.';
             }
@@ -578,26 +669,27 @@
             if (e.target === modal) closeModal();
         });
 
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !modal.classList.contains('hidden')) closeModal();
+        });
+
         function populateList(items) {
             loadingIndicator.classList.add('hidden');
-
             if (!items || items.length === 0) {
                 emptyMessage.querySelector('p.text-slate-600').innerText = 'Nenhum material encontrado';
                 emptyMessage.querySelector('p.text-slate-400').innerText = 'Esta área ainda não tem inventário cadastrado';
                 emptyMessage.classList.remove('hidden');
                 return;
             }
-
             inventoryListContainer.classList.remove('hidden');
             inventoryListContainer.classList.add('flex');
 
             items.forEach((item, idx) => {
                 const li = document.createElement('li');
                 li.className = "inventory-item flex justify-between items-center p-3 rounded-xl shadow-sm";
-                li.style.animationDelay = `${idx * 50}ms`;
+                li.style.animationDelay = `${idx * 55}ms`;
 
                 const statusReal = item.status ? item.status.toLowerCase() : 'ok';
-
                 let statusConfig = {
                     ok: { color: 'bg-emerald-100 text-emerald-700', dot: 'bg-emerald-500', label: 'OK' },
                     attention: { color: 'bg-amber-100 text-amber-700', dot: 'bg-amber-500', label: 'ATENÇÃO' },
@@ -641,23 +733,22 @@
             });
         }
 
-        // Intercepta o aviso padrão do Google e mostra o nosso Banner bonitão
+        // Intercepta o aviso padrão do Google e mostra o nosso Banner
         window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault(); // Impede o Google de mostrar o aviso feio
-            deferredPrompt = e; // Guarda a permissão para instalar
-            
-            // Faz o banner deslizar de baixo para cima
+            e.preventDefault();
+            deferredPrompt = e;
+
             installPrompt.classList.remove('hidden');
             setTimeout(() => {
                 installPrompt.classList.remove('translate-y-full');
             }, 100);
         });
 
-        // Quando o usuário clica no botão "Instalar" azul
+        // Quando o usuário clica no botão "Instalar"
         installBtn.addEventListener('click', async () => {
-            installPrompt.classList.add('translate-y-full'); // Esconde o banner
+            installPrompt.classList.add('translate-y-full');
             if (deferredPrompt) {
-                deferredPrompt.prompt(); // Mostra a janela oficial de instalação do celular
+                deferredPrompt.prompt();
                 const { outcome } = await deferredPrompt.userChoice;
                 console.log('Instalou?', outcome);
                 deferredPrompt = null;
